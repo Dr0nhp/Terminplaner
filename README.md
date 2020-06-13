@@ -1,0 +1,2 @@
+# Terminplaner
+Discord Scheduler
