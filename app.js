@@ -6,13 +6,13 @@ const { timeStamp } = require('console');
 const client = new Discord.Client();
 let eventArray = [];   // initialization of event Array
 let flag = false;
-
+const saveTime = 3600000;
 
 client.once('ready', () => {
 	console.log(v);
 });
 
-setInterval(function() { wartung(flag); }, 3600000);		//maintan
+setInterval(function() { wartung(flag); }, saveTime);
 
 /************************************* adding functionality to array prototype *************************************/
 
@@ -25,7 +25,7 @@ if (!Array.prototype.last){
 };
 
 
-//checks for min value in any given array of objects and returns obejct with min.attribute
+//checks for min value in any given array of objects and returns object with min.attribute
 Array.prototype.hasMin = function(attrib) {
     return (this.length && this.reduce(function(prev, curr){ 
         return prev[attrib] < curr[attrib] ? prev : curr; 
@@ -36,7 +36,7 @@ Array.prototype.hasMin = function(attrib) {
 /************************************* start of discord bot Terminplaner *************************************/
 
 
-v = "Version 0.5.1"
+v = "Version 0.5.2"
 const helptext = "Hallo!\nMit !befehle erhälst du eine Liste mit Befehlen.\nEs ist Egal, ob du deine Befehle GROSS oder klein schreibst.\nUm einen Termin anzulegen tippe:\n \"!Termin Terminname TeilnehmendePersonen Datum Uhrzeit\"\n ein.";
 const befehle = "Folgende Befehle stehen derzeit zur Verfügung:\n!ping: sendet ein Pong zurück\n!hilfe sendet den Hilfetext\n!befehle öffnet diese Liste mit Befehlen\n!termin legt einen Termin an: Die Folgende Syntax ist zu beachten:\n\n!Termin Terminname TeilnehmendePersonen Datum Uhrzeit\n\n!version: Gibt die Versionsnummer zurück\n!speichern: speichert aktuell verfügbare Termine in einer .json Datei \n!nächster: Zeigt den nächsten Termin an\n!alle: Zeigt alle Events an\n!auto: Schaltet das Autospeichern um\n!schalter: Zeigt den Status des Autospeicherns an.\n";
 
@@ -47,7 +47,7 @@ client.on('message', message => {
 	const args = message.content.slice(prefix.length).split(' ');
 	const command = args.shift().toLowerCase();
 
-		console.log(command, args) //Debug
+	console.log(command, args) //Debug
 
 
 /************************************* every possible command with prefix "!" *************************************/
