@@ -96,13 +96,19 @@ function termin(argsArray) {
 		status = "Die Terminerstellung war nicht erfolgreich.\nBitte nutze 4 Argumente zum erstellen von einem Termin.\n!Hilfe gibt dir eine Hilfestellung."
 		return status;
 	}
+	time = parseTime(argsArray[2],argsArray[3])
+	if (time < Date.parse(new Date)) {
+		status = "Dein Termin liegt in der Vergangenheit. :-("
+		return status;
+	}
+	
 
 	Event = {
 		Terminname: argsArray[0],
 		Teilnehmer: argsArray[1],
 		Datum: argsArray[2],
 		Uhrzeit: argsArray[3],
-		hidden: parseTime(argsArray[2],argsArray[3])
+		hidden: time
 	};
 
 	jsonData = JSON.stringify(Event);
@@ -129,31 +135,26 @@ function next(eventArray) {
 
 
 function parseTime(date,time) {
-
 	//expected dateformat dd.mm.(yyyy)
 	dateArr = date.split('.')
 	day = dateArr[0];
-	month = parseInt(dateArr[1])-1
+	month = parseInt(dateArr[1])-1				//months start with 0 so if User types "1" for january - system thinks he means February 
 	year = dateArr[2];
 
 	// if no year is given
 	if (year == undefined){
 		actualDate = new Date();
-  	actualyear = actualDate.getFullYear();
-	  year = actualyear.toString();
+  		actualyear = actualDate.getFullYear();
+		year = actualyear.toString();
 	}
 
 	//time hh:mm
 	timeArr = time.split(':')
 	hh = timeArr[0];
 	min = timeArr[1];
-
-	givenDate =new Date(year,month,day,hh,min)
-
+	givenDate = new Date(year,month,day,hh,min)
 	timeNumber = Date.parse(givenDate);
 	return timeNumber
 }
-
-
 
 client.login(token);
