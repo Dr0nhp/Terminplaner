@@ -1,13 +1,35 @@
 const Discord = require('discord.js');
 const { prefix, token } = require('./config.json');
 const fs = require('fs');
+//const { nextTick } = require('process');
 const client = new Discord.Client();
+
 
 client.once('ready', () => {
 	console.log(v);
 });
 
-v = "Version 0.0.8"
+//initialization of the Event array
+let eventArray = [];
+
+//for debugging purposes - gives the last element of an array with ARRAY.last
+if (!Array.prototype.last){
+    Array.prototype.last = function(){
+        return this[this.length - 1];
+    };
+};
+
+//Stackexchange
+//checks for min value in any given array of objects and returns obejct with min.attribute
+Array.prototype.hasMin = function(attrib) {
+    return (this.length && this.reduce(function(prev, curr){ 
+        return prev[attrib] < curr[attrib] ? prev : curr; 
+    })) || NULL;
+ }
+
+
+
+v = "Version 0.0.15"
 const helptext = "Hallo!\nMit !befehle erhälst du eine Liste mit Befehlen.\nEs ist Egal, ob du deine Befehle GROSS oder klein schreibst.";
 const befehle = "Folgende Befehle stehen derzeit zur Verfügung:\n!ping\n!hilfe\n!befehle\n!termin\n!version";
 
@@ -33,54 +55,63 @@ client.on('message', message => {
 			break;
 		case "termin":
 			add(termin(args))
+			message.channel.send('Termin angelegt.')
 			break;
 		case "version":
 			message.channel.send(v)
+			break;
+		case "debug":
+			console.log(eventArray.length)
+			console.log(eventArray[0])
+			console.log(eventArray.last())
+			break;
+		case "save":
+			save(eventArray)
+			message.channel.send('Erfolgreich gespeichert')
+			break;
+		case "nächster":
+			message.channel.send(next(eventArray))
+			break;
+		case "alle":
+			message.channel.send(eventArray)
 			break;
 	}
 });
 
 
-// TODO !zeitplan
-
-
-/*
-func termin(array) legt aus Argumenten die mit !termin mitkamen ein JS Objekt an und wandelt es in ein JSON Argument um.
-!termin Meeting, Testgruppe, 25.05.2020, 18:00, 1  <- So Sieht ein Beispielhafter Termin aus.
-*/
-
 function termin(argsArray) {
-
-	event = {
-		bezeichnung: argsArray[0],
-		gruppe: argsArray[1],
-		datum: argsArray[2],
-		zeit: argsArray[3],
+	Event = {
+		Terminname: argsArray[0],
+		Teilnehmer: argsArray[1],
+		Datum: argsArray[2],
+		Uhrzeit: argsArray[3],
 		erinnerung: argsArray[4]
 	};
-
-	jsonData = JSON.stringify(event);
+	jsonData = JSON.stringify(Event);
 	return jsonData;
 }
 
 
 function add(jsonData) {
-	fs.writeFile("./storage.json",jsonData, function(err) {
+	eventArray.push(jsonData) 
+return(0)
+}
+
+
+function save(eventArray) {
+	fs.writeFile("./storage.json",eventArray, function(err) {
 		if (err) {
 			console.log(err)
 		}
 	})
+	return(0)
 }
 
+
+function next(eventArray) {
+	n = eventArray.hasMin("datum")
+	return(n)
+}
+
+
 client.login(token);
-
-
-
-//  const dummyData = JSON.parse(await fs.readFileSync(dirname + "/dummyData.json", "utf8"))
-//  dummyData.user.push(user)
-//  await fs.writeFileSync(dirname + '/dummyData.json', JSON.stringify(dummyData))
-
-
-//const dummyData = JSON.parse(await fs.readFileSync(dirname + "/dummyData.json", "utf8"))
-//dummyData.user.push(user)
-//await fs.writeFileSync(dirname + '/dummyData.json', JSON.stringify(dummyData))
