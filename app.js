@@ -34,7 +34,7 @@ Array.prototype.hasMin = function(attrib) {
 /************************************* start of discord bot Terminplaner *************************************/
 
 
-v = "Version 0.2"
+v = "Version 0.2.1"
 const helptext = "Hallo!\nMit !befehle erhälst du eine Liste mit Befehlen.\nEs ist Egal, ob du deine Befehle GROSS oder klein schreibst.\nUm einen Termin anzulegen tippe:\n \"!Termin Terminname TeilnehmendePersonen Datum Uhrzeit\"\n ein.";
 const befehle = "Folgende Befehle stehen derzeit zur Verfügung:\n!ping\n!hilfe\n!befehle\n!termin\n!version\n!speichern\n!nächster\n!alle";
 
@@ -96,8 +96,7 @@ function termin(argsArray) {
 		status = "Die Terminerstellung war nicht erfolgreich.\nBitte nutze 4 Argumente zum erstellen von einem Termin.\n!Hilfe gibt dir eine Hilfestellung."
 		return status;
 	}
-	//parseTime(argsArray[2],argsArray[3])
-	console.log(typeof(argsArray[3]))
+
 	Event = {
 		Terminname: argsArray[0],
 		Teilnehmer: argsArray[1],
@@ -105,6 +104,7 @@ function termin(argsArray) {
 		Uhrzeit: argsArray[3],
 		hidden: parseTime(argsArray[2],argsArray[3])
 	};
+
 	jsonData = JSON.stringify(Event);
 	eventArray.push(jsonData)
 	status = "Termin erfolgreich angelegt."
