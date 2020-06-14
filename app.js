@@ -4,9 +4,9 @@ const fs = require('fs');
 const { nextTick } = require('process');
 const { timeStamp } = require('console');
 const client = new Discord.Client();
-let eventArray = [];   // initialization of event Array
+let eventArray = new Array();   				// initialization of event Array
 let flag = false;
-const saveTime = 3600000;
+const saveTime = 3000; 							//3600000
 
 client.once('ready', () => {
 	console.log(v);
@@ -17,7 +17,7 @@ setInterval(function() { wartung(flag); }, saveTime);
 /************************************* adding functionality to array prototype *************************************/
 
 
-//for debugging purposes - gives the last element of an array with ARRAY.last
+												//for debugging purposes - gives the last element of an array with ARRAY.last
 if (!Array.prototype.last){
     Array.prototype.last = function(){
         return this[this.length - 1];
@@ -25,7 +25,7 @@ if (!Array.prototype.last){
 };
 
 
-//checks for min value in any given array of objects and returns object with min.attribute
+												//checks for min value in any given array of objects and returns object with min.attribute as string
 Array.prototype.hasMin = function(attrib) {
     return (this.length && this.reduce(function(prev, curr){ 
         return prev[attrib] < curr[attrib] ? prev : curr; 
@@ -47,7 +47,7 @@ client.on('message', message => {
 	const args = message.content.slice(prefix.length).split(' ');
 	const command = args.shift().toLowerCase();
 
-	console.log(command, args) //Debug
+	console.log(command, args) 					
 
 
 /************************************* every possible command with prefix "!" *************************************/
@@ -71,9 +71,6 @@ client.on('message', message => {
 			message.channel.send(v)
 			break;
 		case "debug":
-			console.log(eventArray.length)
-			console.log(eventArray[0])
-			console.log(eventArray.last())
 			break;
 		case "speichern":
 			save(eventArray)
@@ -139,26 +136,24 @@ function save(eventArray) {
 
 function next(eventArray) {
 	n = eventArray.hasMin("hidden")
-	return(n)
+	return(n)									// returns a string not an array or object
 }
 
 
-function parseTime(date,time) {
-	//expected dateformat dd.mm.(yyyy)
+function parseTime(date,time) {					//expected dateformat dd.mm.(yyyy)
+
 	dateArr = date.split('.')
 	day = dateArr[0];
 	month = parseInt(dateArr[1])-1				//months start with 0 so if User types "1" for january - system thinks he means February 
 	year = dateArr[2];
 
-	// if no year is given
-	if (year == undefined){
+	if (year == undefined){						// if no year is given, year is set to current year
 		actualDate = new Date();
   		actualyear = actualDate.getFullYear();
 		year = actualyear.toString();
 	}
 
-	//time hh:mm
-	timeArr = time.split(':')
+	timeArr = time.split(':')					//time hh:mm
 	hh = timeArr[0];
 	min = timeArr[1];
 	givenDate = new Date(year,month,day,hh,min)
@@ -167,10 +162,13 @@ function parseTime(date,time) {
 }
 
 
-function delteOldEntries(){
-	nearestEvent = next(eventArray).hidden
+function delteOldEntries(eventArray){
+	nearestEvent = next(eventArray)				//nearestEvent =  {"Terminname":"Text","Teilnehmer":"Personen","Datum":"19.06","Uhrzeit":"14:13","hidden":1592568780000}
+	nearestEvent = nearestEvent.split("hidden\":");
+	y = nearestEvent[1].slice(0, -1)
+	console.log(typeof(y))						//should be string but we need int
 	actualTime = Date.parse(new Date)
-	if (nearestEvent < actualTime) {
+	if (y < actualTime) {
 		var eventArray = eventArray.filter(function(el) { return el.hidden != nearestEvent; });
 	}
 	return(0)
