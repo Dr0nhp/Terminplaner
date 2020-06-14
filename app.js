@@ -36,7 +36,7 @@ Array.prototype.hasMin = function(attrib) {
 /************************************* start of discord bot Terminplaner *************************************/
 
 
-v = "Version 0.3.1"
+v = "Version 0.4.1"
 const helptext = "Hallo!\nMit !befehle erhälst du eine Liste mit Befehlen.\nEs ist Egal, ob du deine Befehle GROSS oder klein schreibst.\nUm einen Termin anzulegen tippe:\n \"!Termin Terminname TeilnehmendePersonen Datum Uhrzeit\"\n ein.";
 const befehle = "Folgende Befehle stehen derzeit zur Verfügung:\n!ping: sendet ein Pong zurück\n!hilfe sendet den Hilfetext\n!befehle öffnet diese Liste mit Befehlen\n!termin legt einen Termin an: Die Folgende Syntax ist zu beachten:\n!Termin Terminname TeilnehmendePersonen Datum Uhrzeit\n\n!version: Gibt die Versionsnummer zurück\n!speichern: speichert aktuell verfügbare Termine in einer .json Datei \n!nächster: Zeigt den nächsten Termin an\n!alle: Zeigt alle Events an\n!auto: Schaltet das Autospeichern um\n!schalter: Zeigt den Status des Autospeicherns an.\n";
 
@@ -103,12 +103,12 @@ function termin(argsArray) {
 	if (argsArray.length < 4) {
 		console.log("failed <4")
 		status = "Die Terminerstellung war nicht erfolgreich.\nBitte nutze 4 Argumente zum erstellen von einem Termin.\n!Hilfe gibt dir eine Hilfestellung."
-		return status;
+		return(status);
 	}
 	time = parseTime(argsArray[2],argsArray[3])
 	if (time < Date.parse(new Date)) {
 		status = "Dein Termin liegt in der Vergangenheit. :-("
-		return status;
+		return(status)
 	}
 	
 
@@ -123,7 +123,7 @@ function termin(argsArray) {
 	jsonData = JSON.stringify(Event);
 	eventArray.push(jsonData)
 	status = "Termin erfolgreich angelegt."
-	return status;
+	return(status)
 }
 
 
@@ -138,6 +138,9 @@ function save(eventArray) {
 
 
 function next(eventArray) {
+	if (eventArray.length = 0) {
+		return(0)
+	}
 	n = eventArray.hasMin("hidden")
 	return(n)
 }
@@ -163,7 +166,7 @@ function parseTime(date,time) {
 	min = timeArr[1];
 	givenDate = new Date(year,month,day,hh,min)
 	timeNumber = Date.parse(givenDate);
-	return timeNumber
+	return(timeNumber)
 }
 
 
@@ -173,7 +176,7 @@ function delteOldEntries(){
 	if (nearestEvent < actualTime) {
 		var eventArray = eventArray.filter(function(el) { return el.hidden != nearestEvent; });
 	}
-	return 0
+	return(0)
 }
 
 
@@ -183,7 +186,7 @@ function wartung(flag) {
 		console.log("Saved")
 	}
 	delteOldEntries()
-	return 0
+	return(0)
 };
 
 
