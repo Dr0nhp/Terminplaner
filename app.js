@@ -1,16 +1,19 @@
 const Discord = require('discord.js');
 const { prefix, token } = require('./config.json');
 const fs = require('fs');
-//const { nextTick } = require('process');
+const { nextTick } = require('process');
+const { timeStamp } = require('console');
 const client = new Discord.Client();
+let eventArray = [];   // initialization of event Array
 
 
 client.once('ready', () => {
 	console.log(v);
 });
 
-//initialization of the Event array
-let eventArray = [];
+
+/************************************* adding functionality to array prototype *************************************/
+
 
 //for debugging purposes - gives the last element of an array with ARRAY.last
 if (!Array.prototype.last){
@@ -19,7 +22,7 @@ if (!Array.prototype.last){
     };
 };
 
-//Stackexchange
+
 //checks for min value in any given array of objects and returns obejct with min.attribute
 Array.prototype.hasMin = function(attrib) {
     return (this.length && this.reduce(function(prev, curr){ 
@@ -28,10 +31,12 @@ Array.prototype.hasMin = function(attrib) {
  }
 
 
+/************************************* start of discord bot Terminplaner *************************************/
 
-v = "Version 0.0.15"
-const helptext = "Hallo!\nMit !befehle erhälst du eine Liste mit Befehlen.\nEs ist Egal, ob du deine Befehle GROSS oder klein schreibst.";
-const befehle = "Folgende Befehle stehen derzeit zur Verfügung:\n!ping\n!hilfe\n!befehle\n!termin\n!version";
+
+v = "Version 0.1"
+const helptext = "Hallo!\nMit !befehle erhälst du eine Liste mit Befehlen.\nEs ist Egal, ob du deine Befehle GROSS oder klein schreibst.\nUm einen Termin anzulegen tippe:\n \"!Termin Terminname TeilnehmendePersonen Datum Uhrzeit\"\n ein.";
+const befehle = "Folgende Befehle stehen derzeit zur Verfügung:\n!ping\n!hilfe\n!befehle\n!termin\n!version\n!speichern\n!nächster\n!alle";
 
 
 client.on('message', message => {
@@ -41,6 +46,9 @@ client.on('message', message => {
 	const command = args.shift().toLowerCase();
 
 		console.log(command, args) //Debug
+
+
+/************************************* every possible command with prefix "!" *************************************/
 
 
 	switch (command) {
@@ -54,8 +62,8 @@ client.on('message', message => {
 			message.channel.send(befehle)
 			break;
 		case "termin":
-			add(termin(args))
-			message.channel.send('Termin angelegt.')
+			termin(args)
+			message.channel.send(status)
 			break;
 		case "version":
 			message.channel.send(v)
@@ -65,36 +73,41 @@ client.on('message', message => {
 			console.log(eventArray[0])
 			console.log(eventArray.last())
 			break;
-		case "save":
+		case "speichern":
 			save(eventArray)
 			message.channel.send('Erfolgreich gespeichert')
 			break;
 		case "nächster":
-			message.channel.send(next(eventArray))
+			message.channel.send("Der nächste Termin ist:\n" + next(eventArray))
 			break;
 		case "alle":
-			message.channel.send(eventArray)
+			message.channel.send("Folgende Termine sind derzeit vorhanden:\n" + eventArray)
 			break;
 	}
 });
 
 
+/************************************* functionality and calls are down below *************************************/
+
+
 function termin(argsArray) {
+	if (argsArray.length < 4) {
+		console.log("failed <4")
+		status = "Die Terminerstellung war nicht erfolgreich.\nBitte nutze 4 Argumente zum erstellen von einem Termin.\n!Hilfe gibt dir eine Hilfestellung."
+		return status;
+	}
+
 	Event = {
 		Terminname: argsArray[0],
 		Teilnehmer: argsArray[1],
 		Datum: argsArray[2],
 		Uhrzeit: argsArray[3],
-		erinnerung: argsArray[4]
+		hidden: argsArray[4]
 	};
 	jsonData = JSON.stringify(Event);
-	return jsonData;
-}
-
-
-function add(jsonData) {
-	eventArray.push(jsonData) 
-return(0)
+	eventArray.push(jsonData)
+	status = "Termin erfolgreich angelegt."
+	return status;
 }
 
 
@@ -109,7 +122,7 @@ function save(eventArray) {
 
 
 function next(eventArray) {
-	n = eventArray.hasMin("datum")
+	n = eventArray.hasMin("Datum")
 	return(n)
 }
 
