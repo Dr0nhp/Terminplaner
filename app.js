@@ -6,7 +6,7 @@ const { timeStamp } = require('console');
 const client = new Discord.Client();
 let eventArray = new Array();   				// initialization of event Array
 let flag = false;
-const saveTime = 3000; 							//3600000
+const saveTime = 1000; 							//3600000
 
 client.once('ready', () => {
 	console.log(v);
@@ -36,7 +36,7 @@ Array.prototype.hasMin = function(attrib) {
 /************************************* start of discord bot Terminplaner *************************************/
 
 
-v = "Version 1.0.0"
+v = "Version 1.0.15"
 const helptext = "Hallo!\nMit !befehle erhälst du eine Liste mit Befehlen.\nEs ist Egal, ob du deine Befehle GROSS oder klein schreibst.\nUm einen Termin anzulegen tippe:\n \"!Termin Terminname TeilnehmendePersonen Datum Uhrzeit\"\n ein.";
 const befehle = "Folgende Befehle stehen derzeit zur Verfügung:\n!ping: sendet ein Pong zurück\n!hilfe sendet den Hilfetext\n!befehle öffnet diese Liste mit Befehlen\n!termin legt einen Termin an: Die Folgende Syntax ist zu beachten:\n\n!Termin Terminname TeilnehmendePersonen Datum Uhrzeit\n\n!version: Gibt die Versionsnummer zurück\n!speichern: speichert aktuell verfügbare Termine in einer .json Datei \n!nächster: Zeigt den nächsten Termin an\n!alle: Zeigt alle Events an\n!auto: Schaltet das Autospeichern um\n!schalter: Zeigt den Status des Autospeicherns an.\n";
 
@@ -163,15 +163,22 @@ function parseTime(date,time) {					//expected dateformat dd.mm.(yyyy)
 
 
 function delteOldEntries(eventArray){
+
+	if (eventArray.length == 0) {
+		return(0)
+	}
 	nearestEvent = next(eventArray)				//nearestEvent =  {"Terminname":"Text","Teilnehmer":"Personen","Datum":"19.06","Uhrzeit":"14:13","hidden":1592568780000}
 	nearestEvent = nearestEvent.split("hidden\":");
-	y = nearestEvent[1].slice(0, -1)
-	console.log(typeof(y))						//should be string but we need int
+	timeOfNextEvent = nearestEvent[1].slice(0, -1)
+	timeOfNextEvent = Number(timeOfNextEvent)
 	actualTime = Date.parse(new Date)
-	if (y < actualTime) {
-		var eventArray = eventArray.filter(function(el) { return el.hidden != nearestEvent; });
+
+	if (timeOfNextEvent < actualTime) {		
+		eventArray = eventArray.filter(function(el) { return el.hidden > actualTime; });
+		console.log(eventArray)
+		return (eventArray)
 	}
-	return(0)
+	return(eventArray)
 }
 
 
@@ -180,8 +187,8 @@ function wartung(flag) {
 		save(eventArray)
 		console.log("Saved")
 	}
-	delteOldEntries()
-	return(0)
+	delteOldEntries(eventArray)
+	return(eventArray)
 };
 
 
