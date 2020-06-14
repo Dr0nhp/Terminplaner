@@ -36,7 +36,7 @@ Array.prototype.hasMin = function(attrib) {
 /************************************* start of discord bot Terminplaner *************************************/
 
 
-v = "Version 0.5.2"
+v = "Version 1.0.0"
 const helptext = "Hallo!\nMit !befehle erhälst du eine Liste mit Befehlen.\nEs ist Egal, ob du deine Befehle GROSS oder klein schreibst.\nUm einen Termin anzulegen tippe:\n \"!Termin Terminname TeilnehmendePersonen Datum Uhrzeit\"\n ein.";
 const befehle = "Folgende Befehle stehen derzeit zur Verfügung:\n!ping: sendet ein Pong zurück\n!hilfe sendet den Hilfetext\n!befehle öffnet diese Liste mit Befehlen\n!termin legt einen Termin an: Die Folgende Syntax ist zu beachten:\n\n!Termin Terminname TeilnehmendePersonen Datum Uhrzeit\n\n!version: Gibt die Versionsnummer zurück\n!speichern: speichert aktuell verfügbare Termine in einer .json Datei \n!nächster: Zeigt den nächsten Termin an\n!alle: Zeigt alle Events an\n!auto: Schaltet das Autospeichern um\n!schalter: Zeigt den Status des Autospeicherns an.\n";
 

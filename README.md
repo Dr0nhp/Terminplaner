@@ -66,5 +66,10 @@ Also toggles the switch for activating autosave.
 ### schalter
 Respondes if the autosave is toggled on (True) or off (False).
 
+## Thanks
+
+It ain't much, but its honest work.
+
+
 
 
