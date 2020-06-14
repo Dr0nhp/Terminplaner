@@ -6,13 +6,13 @@ const { timeStamp } = require('console');
 const client = new Discord.Client();
 let eventArray = new Array();   				// initialization of event Array
 let flag = false;
-const saveTime = 1000; 							//3600000
+const saveTime = 3600000; 							//3600000
 
 client.once('ready', () => {
 	console.log(v);
 });
 
-setInterval(function() { wartung(flag); }, saveTime);
+//setInterval(function() { wartung(flag); }, saveTime);
 
 /************************************* adding functionality to array prototype *************************************/
 
@@ -36,7 +36,7 @@ Array.prototype.hasMin = function(attrib) {
 /************************************* start of discord bot Terminplaner *************************************/
 
 
-v = "Version 1.0.15"
+v = "Version 1.0.16"
 const helptext = "Hallo!\nMit !befehle erhälst du eine Liste mit Befehlen.\nEs ist Egal, ob du deine Befehle GROSS oder klein schreibst.\nUm einen Termin anzulegen tippe:\n \"!Termin Terminname TeilnehmendePersonen Datum Uhrzeit\"\n ein.";
 const befehle = "Folgende Befehle stehen derzeit zur Verfügung:\n!ping: sendet ein Pong zurück\n!hilfe sendet den Hilfetext\n!befehle öffnet diese Liste mit Befehlen\n!termin legt einen Termin an: Die Folgende Syntax ist zu beachten:\n\n!Termin Terminname TeilnehmendePersonen Datum Uhrzeit\n\n!version: Gibt die Versionsnummer zurück\n!speichern: speichert aktuell verfügbare Termine in einer .json Datei \n!nächster: Zeigt den nächsten Termin an\n!alle: Zeigt alle Events an\n!auto: Schaltet das Autospeichern um\n!schalter: Zeigt den Status des Autospeicherns an.\n";
 
@@ -71,6 +71,7 @@ client.on('message', message => {
 			message.channel.send(v)
 			break;
 		case "debug":
+			delteOldEntries(eventArray)
 			break;
 		case "speichern":
 			save(eventArray)
@@ -164,9 +165,12 @@ function parseTime(date,time) {					//expected dateformat dd.mm.(yyyy)
 
 function delteOldEntries(eventArray){
 
+	console.log("entry",eventArray.length)
 	if (eventArray.length == 0) {
+		console.log("length is 0 so we should abort")
 		return(0)
 	}
+
 	nearestEvent = next(eventArray)				//nearestEvent =  {"Terminname":"Text","Teilnehmer":"Personen","Datum":"19.06","Uhrzeit":"14:13","hidden":1592568780000}
 	nearestEvent = nearestEvent.split("hidden\":");
 	timeOfNextEvent = nearestEvent[1].slice(0, -1)
