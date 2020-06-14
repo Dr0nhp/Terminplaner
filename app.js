@@ -5,12 +5,14 @@ const { nextTick } = require('process');
 const { timeStamp } = require('console');
 const client = new Discord.Client();
 let eventArray = [];   // initialization of event Array
+let flag = false;
 
 
 client.once('ready', () => {
 	console.log(v);
 });
 
+setInterval(function() { wartung(flag); }, 3600000);		//maintan
 
 /************************************* adding functionality to array prototype *************************************/
 
@@ -83,6 +85,9 @@ client.on('message', message => {
 		case "alle":
 			message.channel.send("Folgende Termine sind derzeit vorhanden:\n" + eventArray)
 			break;
+		case "auto":
+			flag = flag ? false : true;
+			message.channel.send("Der automatische Speichermodus ist auf\n" + flag)
 	}
 });
 
@@ -156,5 +161,26 @@ function parseTime(date,time) {
 	timeNumber = Date.parse(givenDate);
 	return timeNumber
 }
+
+
+function delteOldEntries(){
+	nearestEvent = next(eventArray).hidden
+	actualTime = Date.parse(new Date)
+	if (nearestEvent < actualTime) {
+		var eventArray = eventArray.filter(function(el) { return el.hidden != nearestEvent; });
+	}
+	return 0
+}
+
+
+function wartung(flag) {
+	if (flag == true){
+		save(eventArray)
+		console.log("Saved")
+	}
+	delteOldEntries()
+	return 0
+};
+
 
 client.login(token);
