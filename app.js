@@ -79,7 +79,8 @@ client.on('message', message => {
 			save(jsonArray)
 			message.channel.send('Erfolgreich gespeichert')
 			break;
-		case "nächster":												//done
+		case "nächster":
+			if (eventArray.length < 1){break;}
 			event_ =(next(eventArray))
 			message.channel.send("Der nächste Termin \"" + event_.Terminname + "\" ist am " + event_.Datum + " um "+ event_.Uhrzeit + ". Teilnehmer ist/sind: " + event_.Teilnehmer )
 			break;
