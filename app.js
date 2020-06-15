@@ -4,15 +4,18 @@ const fs = require('fs');
 const { nextTick } = require('process');
 const { timeStamp } = require('console');
 const client = new Discord.Client();
-let eventArray = new Array();   				// initialization of event Array
+let eventArray = new Array();
+let jsonArray = new Array();    				// initialization of event Array
 let flag = false;
-const saveTime = 3600000; 						//3600000
+const saveTime = 3600000; 						//3600000 = 1h;  300000 = 5min; 5000 = 5 sek
+const maintenanceTime = 5000;
 
 client.once('ready', () => {
 	console.log(v);
 });
 
-//setInterval(function() { wartung(flag); }, saveTime);
+setInterval(function() { maintain(); }, maintenanceTime);
+setInterval(function() { autosave(flag); }, saveTime);
 
 /************************************* adding functionality to array prototype *************************************/
 
@@ -25,7 +28,7 @@ if (!Array.prototype.last){
 };
 
 
-												//checks for min value in any given array of objects and returns string with min.attribute as string
+												//checks for min value in any given array of objects and returns smallest value object
 Array.prototype.hasMin = function(attrib) {
     return (this.length && this.reduce(function(prev, curr){ 
         return prev[attrib] < curr[attrib] ? prev : curr; 
@@ -36,9 +39,9 @@ Array.prototype.hasMin = function(attrib) {
 /************************************* start of discord bot Terminplaner *************************************/
 
 
-v = "Version 1.0.17"
+v = "Version 1.0.5"
 const helptext = "Hallo!\nMit !befehle erhälst du eine Liste mit Befehlen.\nEs ist Egal, ob du deine Befehle GROSS oder klein schreibst.\nUm einen Termin anzulegen tippe:\n \"!Termin Terminname TeilnehmendePersonen Datum Uhrzeit\"\n ein.";
-const befehle = "Folgende Befehle stehen derzeit zur Verfügung:\n!ping: sendet ein Pong zurück\n!hilfe sendet den Hilfetext\n!befehle öffnet diese Liste mit Befehlen\n!termin legt einen Termin an: Die Folgende Syntax ist zu beachten:\n\n!Termin Terminname TeilnehmendePersonen Datum Uhrzeit\n\n!version: Gibt die Versionsnummer zurück\n!speichern: speichert aktuell verfügbare Termine in einer .json Datei \n!nächster: Zeigt den nächsten Termin an\n!alle: Zeigt alle Events an\n!auto: Schaltet das Autospeichern um\n!schalter: Zeigt den Status des Autospeicherns an.\n";
+const befehle = "Folgende Befehle stehen derzeit zur Verfügung:\n!ping: sendet ein Pong zurück\n!hilfe sendet den Hilfetext\n!befehle öffnet diese Liste mit Befehlen\n!termin legt einen Termin an: Die Folgende Syntax ist zu beachten:\n\n!Termin Terminname TeilnehmendePersonen Datum Uhrzeit\n\n!version: Gibt die Versionsnummer zurück\n!speichern: speichert alle Termine in einer .json Datei \n!nächster: Zeigt den nächsten Termin an\n!alle: Zeigt alle angelegten Events an\n!auto: Schaltet das Autospeichern um\n!schalter: Zeigt den Status des Autospeicherns an.\n";
 
 
 client.on('message', message => {
@@ -54,34 +57,34 @@ client.on('message', message => {
 
 
 	switch (command) {
-		case "ping":
+		case "ping":													//done
 			message.channel.send('Pong.')
 			break;
-		case "hilfe":
+		case "hilfe":													//done
 			message.channel.send(helptext)
 			break;
-		case "befehle":
+		case "befehle":													//done
 			message.channel.send(befehle)
 			break;
-		case "termin":
+		case "termin":													//done
 			termin(args)
 			message.channel.send(status)
 			break;
-		case "version":
+		case "version":													//done
 			message.channel.send(v)
 			break;
 		case "debug":
-			delteOldEntries(eventArray)
 			break;
 		case "speichern":
-			save(eventArray)
+			save(jsonArray)
 			message.channel.send('Erfolgreich gespeichert')
 			break;
-		case "nächster":
-			message.channel.send("Der nächste Termin ist:\n" + next(eventArray))
+		case "nächster":												//done
+			event_ =(next(eventArray))
+			message.channel.send("Der nächste Termin \"" + event_.Terminname + "\" ist am " + event_.Datum + " um "+ event_.Uhrzeit + ". Teilnehmer ist/sind: " + event_.Teilnehmer )
 			break;
-		case "alle":
-			message.channel.send("Folgende Termine sind derzeit vorhanden:\n" + eventArray)
+		case "alle":													//done
+			message.channel.send("Folgende Termine wurden bisher angelegt:\n" + jsonArray)
 			break;
 		case "auto":
 			flag = flag ? false : true;
@@ -109,7 +112,6 @@ function termin(argsArray) {
 		return(status)
 	}
 	
-
 	Event = {
 		Terminname: argsArray[0],
 		Teilnehmer: argsArray[1],
@@ -118,15 +120,16 @@ function termin(argsArray) {
 		hidden: time
 	};
 
-	jsonData = JSON.stringify(Event);
-	eventArray.push(jsonData)
+	jsondata = JSON.stringify(Event)
+	jsonArray.push(jsondata)
+	eventArray.push(Event)
 	status = "Termin erfolgreich angelegt."
 	return(status)
 }
 
 
-function save(eventArray) {
-	fs.writeFile("./storage.json",eventArray, function(err) {
+function save(jsonArray) {																				
+	fs.writeFile("./storage.json",jsonArray, function(err) {
 		if (err) {
 			console.log(err)
 		}
@@ -137,7 +140,7 @@ function save(eventArray) {
 
 function next(eventArray) {
 	n = eventArray.hasMin("hidden")
-	return(n)									// returns a string not an array or object
+	return(n)																							
 }
 
 
@@ -163,35 +166,35 @@ function parseTime(date,time) {					//expected dateformat dd.mm.(yyyy)
 }
 
 
-function delteOldEntries(eventArray){
+function rebuildDeleteEntry(eventArray){
 
-	console.log("entry",eventArray.length)
-	if (eventArray.length == 0) {
-		console.log("length is 0 so we should abort")
-		return(0)
+	//Check if array is empty -> early exit
+	if (eventArray.length < 1) {
+		return(eventArray)
 	}
-
-	nearestEvent = next(eventArray)				//nearestEvent =  {"Terminname":"Text","Teilnehmer":"Personen","Datum":"19.06","Uhrzeit":"14:13","hidden":1592568780000}
-	nearestEvent = nearestEvent.split("hidden\":");
-	timeOfNextEvent = nearestEvent[1].slice(0, -1)
-	timeOfNextEvent = Number(timeOfNextEvent)
+	//If passed we get the next Event as Object back, get its time value and get actual time
+	nearestEvent = next(eventArray)
+	timeOfNextEvent = nearestEvent.hidden
 	actualTime = Date.parse(new Date)
-
+	// Check if the the next event is past actual time -> Cut that element from array
 	if (timeOfNextEvent < actualTime) {		
 		eventArray = eventArray.filter(function(el) { return el.hidden > actualTime; });
-		console.log(eventArray)
 		return (eventArray)
 	}
 	return(eventArray)
 }
 
 
-function wartung(flag) {
+function autosave(flag) {
 	if (flag == true){
 		save(eventArray)
 		console.log("Saved")
 	}
-	delteOldEntries(eventArray)
+};
+
+
+function maintain() {
+	eventArray = rebuildDeleteEntry(eventArray)
 	return(eventArray)
 };
 

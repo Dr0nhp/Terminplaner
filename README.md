@@ -3,6 +3,13 @@ Simple Discord Scheduler
 
 ## Installing
 To use this code you need [Nodejs](https://nodejs.org/) and [Discord,js](https://discord.js.org/).
+Also you need a config.json file with the following entries:
+```
+{
+	"prefix": "!",
+	"token": "YourSecretTokenYouGetFromDevDiscord"
+}
+```
 
 ## Starting
 To Start the Bot you simply need to start node.js with the app.js within your commandline.
@@ -12,7 +19,6 @@ node app.js
 
 ## Using
 The Bot is developed for german users. So all of the commands are in german language. As the rest of the code is written in english it should be easy to translate. You cannot create Events on passed Dates. Passed events are deleted every 60 minutes.
-
 
 ## Commands
 The prefix ! is required for all commands. All writing cases are supported.
@@ -54,10 +60,10 @@ Offers debuginformation for the EventArray. Will probably delted.
 Saves the EventArray as storage.json on the machine where the server runs. Just a fallback if the bot gets killed. 
 
 ### nächster
-Respondes with the next occuring event. Shows the whole Event Object. It's ugly.
+Respondes with the next occuring event.
 
 ### alle
-Respondes the eventArray. It's even uglier.
+Respondes with all created events.
 
 ### auto
 Is for autosave every 60 minutes. The saveinterval is changeable at const saveTime. Time has to be in ms. so 60 minutes are 3600000 ms.
@@ -67,9 +73,4 @@ Also toggles the switch for activating autosave.
 Respondes if the autosave is toggled on (True) or off (False).
 
 ## Thanks
-
 It ain't much, but its honest work.
-
-
-
-
