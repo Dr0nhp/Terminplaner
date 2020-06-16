@@ -1,3 +1,4 @@
 node_modules
 config.json
 storage.json
+package-lock.json
