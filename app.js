@@ -5,7 +5,7 @@ const { nextTick } = require('process');
 const { timeStamp } = require('console');
 const client = new Discord.Client();
 let eventArray = new Array();
-let jsonArray = new Array();    				// initialization of event Array
+let jsonArray = new Array();
 let flag = false;
 const saveTime = 3600000; 						//3600000 = 1h;  300000 = 5min; 5000 = 5 sek
 const maintenanceTime = 5000;
@@ -57,20 +57,20 @@ client.on('message', message => {
 
 
 	switch (command) {
-		case "ping":													//done
+		case "ping":
 			message.channel.send('Pong.')
 			break;
-		case "hilfe":													//done
+		case "hilfe":
 			message.channel.send(helptext)
 			break;
-		case "befehle":													//done
+		case "befehle":
 			message.channel.send(befehle)
 			break;
-		case "termin":													//done
+		case "termin":
 			termin(args)
 			message.channel.send(status)
 			break;
-		case "version":													//done
+		case "version":													
 			message.channel.send(v)
 			break;
 		case "debug":
@@ -84,7 +84,7 @@ client.on('message', message => {
 			event_ =(next(eventArray))
 			message.channel.send("Der nächste Termin \"" + event_.Terminname + "\" ist am " + event_.Datum + " um "+ event_.Uhrzeit + ". Teilnehmer ist/sind: " + event_.Teilnehmer )
 			break;
-		case "alle":													//done
+		case "alle":													
 			message.channel.send("Folgende Termine wurden bisher angelegt:\n" + jsonArray)
 			break;
 		case "auto":
@@ -104,7 +104,7 @@ client.on('message', message => {
 function termin(argsArray) {
 	if (argsArray.length < 4) {
 		console.log("failed <4")
-		status = "Die Terminerstellung war nicht erfolgreich.\nBitte nutze 4 Argumente zum erstellen von einem Termin.\n!Hilfe gibt dir eine Hilfestellung."
+		status = "Die Terminerstellung war nicht erfolgreich.\nBitte nutze 4 Argumente zum Erstellen eines Termins.\n!Hilfe gibt dir eine Hilfestellung zu den Argumenten."
 		return(status);
 	}
 	time = parseTime(argsArray[2],argsArray[3])
@@ -145,11 +145,10 @@ function next(eventArray) {
 }
 
 
-function parseTime(date,time) {					//expected dateformat dd.mm.(yyyy)
-
+function parseTime(date,time) {					//expected dateformat dd.mm(.yyyy)
 	dateArr = date.split('.')
 	day = dateArr[0];
-	month = parseInt(dateArr[1])-1				//months start with 0 so if User types "1" for january - system thinks he means February 
+	month = parseInt(dateArr[1])-1				//-1 as months start with 0 = january 
 	year = dateArr[2];
 
 	if (year == undefined){						// if no year is given, year is set to current year
@@ -168,16 +167,14 @@ function parseTime(date,time) {					//expected dateformat dd.mm.(yyyy)
 
 
 function rebuildDeleteEntry(eventArray){
-
-	//Check if array is empty -> early exit
-	if (eventArray.length < 1) {
+	if (eventArray.length < 1) {				//Check if array is empty -> early exit
 		return(eventArray)
 	}
-	//If passed we get the next Event as Object back, get its time value and get actual time
+												//If passed we get the next Event as Object back, get its time value and get current time
 	nearestEvent = next(eventArray)
 	timeOfNextEvent = nearestEvent.hidden
 	actualTime = Date.parse(new Date)
-	// Check if the the next event is past actual time -> Cut that element from array
+												// Check if the the next event is past actual time -> Cut that element from array
 	if (timeOfNextEvent < actualTime) {		
 		eventArray = eventArray.filter(function(el) { return el.hidden > actualTime; });
 		return (eventArray)
