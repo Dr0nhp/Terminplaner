@@ -1,5 +1,5 @@
-.gitignore
 node_modules
 storage.json
 package-lock.json
+config.json
 config.json
