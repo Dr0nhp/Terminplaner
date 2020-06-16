@@ -1,13 +1,20 @@
 # Terminplaner
-Simple Discord Scheduler
+S simple Discord bot for scheduling Events. You can create Events and display the next event.
 
-## Installing
+## Prerequisites
 To use this code you need [Nodejs](https://nodejs.org/) and [Discord,js](https://discord.js.org/).
-Also you need a config.json file with the following entries:
+You also need your own Discord application token which you can get from [Discord.com/Developers](https://discord.com/developers/applications). 
+Click and fill requiered Fields: 
+* New Application
+* Bot
+* Copy Token
+
+The token should then pasted into the config.json file at "token".
+
 ```
 {
 	"prefix": "!",
-	"token": "YourSecretTokenYouGetFromDevDiscord"
+	"token": "Your Token goes here"
 }
 ```
 
@@ -16,61 +23,30 @@ To Start the Bot you simply need to start node.js with the app.js within your co
 ```
 node app.js
 ```
+## Localization
+The Bot is developed for german users. So all of the commands are in german. As the code is written in english it should be easy to translate.
 
 ## Using
-The Bot is developed for german users. So all of the commands are in german language. As the rest of the code is written in english it should be easy to translate. You cannot create Events on passed Dates. Passed events are deleted every 60 minutes.
+You can PM the Bot to create events, or you can talk to the bot in public channels.
 
-## Commands
-The prefix ! is required for all commands. All writing cases are supported.
-
-### ping
-Response with a Pong. Why? Because!
-
-### hilfe
-Respones with some general help and hints to the "Befehle" command.
-
-### befehle
-Gives all available commands despite debug.
-
-### termin
-Is for adding an Event. The Syntax is as follows:
+### Create event
+To create an event you type:
 ```
 !termin NameOfTheEvent ParticipatingPersons DateOfEvent TimeOfEvent
 ```
-Please be aware of the usage of spaces in between arguments.
+Please be aware of the spaces in between arguments.
 
-The date notation is:
+### Display next event
 ```
-DD.MM(.YYYY)
-```
-Year is an optional parameter if not set - it will use the current year as input.
-
-The time notaion is:
-```
-HH:MM
+!nächster
 ```
 
-### version
-Responds with the versionnumber.
+### List of available commands (and description of them)
+```
+!befehle
+```
 
-### debug
-Offers debuginformation for the EventArray. Will probably delted.
-
-### speichern
-Saves the EventArray as storage.json on the machine where the server runs. Just a fallback if the bot gets killed. 
-
-### nächster
-Respondes with the next occuring event.
-
-### alle
-Respondes with all created events.
-
-### auto
-Is for autosave every 60 minutes. The saveinterval is changeable at const saveTime. Time has to be in ms. so 60 minutes are 3600000 ms.
-Also toggles the switch for activating autosave.
-
-### schalter
-Respondes if the autosave is toggled on (True) or off (False).
-
-## Thanks
-It ain't much, but its honest work.
+### Generic help
+```
+!hilfe
+```
