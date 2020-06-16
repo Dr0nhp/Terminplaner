@@ -4,7 +4,7 @@ S simple Discord bot for scheduling Events. You can create Events and display th
 ## Prerequisites
 To use this code you need [Nodejs](https://nodejs.org/) and [Discord,js](https://discord.js.org/).
 You also need your own Discord application token which you can get from [Discord.com/Developers](https://discord.com/developers/applications). 
-Click and fill requiered fields: 
+Click and fill required fields: 
 * New Application
 * Bot
 * Copy Token
