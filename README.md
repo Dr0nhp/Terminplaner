@@ -1,5 +1,5 @@
 # Terminplaner
-S simple Discord bot for scheduling Events. You can create Events and display the next event.
+Simple Discord bot for scheduling Events. You can create Events and display the next event.
 
 ## Prerequisites
 To use this code you need [Nodejs](https://nodejs.org/) and [Discord,js](https://discord.js.org/).
