@@ -7,7 +7,7 @@ const client = new Discord.Client();
 let eventArray = new Array();
 let jsonArray = new Array();
 let flag = false;
-const saveTime = 3600000; 						//3600000 = 1h;  300000 = 5min; 5000 = 5 sek
+const saveTime = 3600000; 						//3600000 = 1h;  300000 = 5min; 60000 = 1min; 5000 = 5 sek
 const maintenanceTime = 5000;
 
 client.once('ready', () => {
